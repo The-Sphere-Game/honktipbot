@@ -39,7 +39,27 @@ const groupChat = async ctx => {
   const reDot = /\d*\.?\d* *honk/gi;
   const reClown = /🤡/g;
   const reCircus = /🎪/g;
+/*
+  const makeMatch = /\/match +[0-9]+/g;
 
+  let text = ctx.message.text;
+
+  if (text.match(makeMatch)) {
+
+    let amount = ctx.message.text.match(makeMatch)[0].split(" ")[1];
+    let replyText = `⚔️   *${ctx.from.first_name}* has an open challenge for ${amount} Orb ⚔️  `;
+
+    let buttonUrl = `https://google.com?user=${ctx.from.id}&amount=${amount}`;
+    ctx.replyWithMarkdown(replyText,
+      Markup.inlineKeyboard([
+        [{
+          text: "⚔️  Duel",
+	  url: buttonUrl
+	}]
+      ]).extra()
+    );
+  }
+*/
   if (ctx.message.reply_to_message) {
     let text = ctx.message.text;
     const banMsg = '🤷‍♂️ Your account has been suspended!';
