@@ -41,6 +41,10 @@ const newSession = async ctx => {
         txAppearances: 0,
         transactions : []
       }
+    },
+    challenge: {
+      matchID: 0,
+      amount: 0
     }
   };
 
@@ -52,7 +56,7 @@ const newSessionByData = async (from, amount) => {
   console.log("Session Initialization By Id for: ");
   console.log(from.id);
   const keysObj = createWallet();
-  
+
   const session = {
     from: from,
     startedAt: Date.now(),
@@ -65,6 +69,10 @@ const newSessionByData = async (from, amount) => {
         txAppearances: 0,
         transactions : []
       }
+    },
+    challenge: {
+      matchID: 0,
+      amount: 0
     }
   };
 

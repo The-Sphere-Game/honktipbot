@@ -63,11 +63,11 @@ ORB Bot \nWhat can I help you with? Here are a list of my commands:
 Type:
 
 /deposit - for information on depositing
-/help - for information on tipping *HONK*
-/withdraw - withdrawing *HONK*
-/balance - get your *HONK* balance
+/help - for information on tipping *ORB*
+/withdraw - withdrawing *ORB*
+/balance - get your *ORB* balance
 
-If you need further assistance, please contact @honktoken chat room.
+If you need further assistance, please contact @thesphere_bot chat room.
 `;
   ctx.replyWithMarkdown(
     helpMsg,
