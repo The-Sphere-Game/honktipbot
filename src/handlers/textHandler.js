@@ -39,29 +39,13 @@ const groupChat = async ctx => {
   const reDot = /\d*\.?\d* *honk/gi;
   const reClown = /🤡/g;
   const reCircus = /🎪/g;
-/*
-  const makeMatch = /\/match +[0-9]+/g;
+
+  const makeMatch = /\/challenge +[0-9]+/g;
 
   let text = ctx.message.text;
 
-  if (text.match(makeMatch)) {
-
-    let amount = ctx.message.text.match(makeMatch)[0].split(" ")[1];
-    let replyText = `⚔️   *${ctx.from.first_name}* has an open challenge for ${amount} Orb ⚔️  `;
-
-    let buttonUrl = `https://google.com?user=${ctx.from.id}&amount=${amount}`;
-    ctx.replyWithMarkdown(replyText,
-      Markup.inlineKeyboard([
-        [{
-          text: "⚔️  Duel",
-	  url: buttonUrl
-	}]
-      ]).extra()
-    );
-  }
-*/
   if (ctx.message.reply_to_message) {
-    let text = ctx.message.text;
+//    let text = ctx.message.text;
     const banMsg = '🤷‍♂️ Your account has been suspended!';
 
     if (parseFloat(text.match(reDot)) || parseFloat(text.match(reComma))) {
@@ -107,6 +91,53 @@ const groupChat = async ctx => {
   }
 };
 
+const challenge = async (ctx, amount) => {
+  /*
+    if (text.match(makeMatch)) {
+  //    const fromUser = ctx.from;
+  //    const toUser = ctx.message.reply_to_message.from;
+
+      if (fromUser.id === toUser.id) return `Cannot challenge yourself`;
+
+      let amount = ctx.message.text.match(makeMatch)[0].split(" ")[1];
+      let replyText = `⚔️   *${ctx.from.first_name}* has an open challenge for ${amount} Orb ⚔️  `;
+
+  //let buttonUrl = `http://sphere.tg.dev.bigkesh.com/matchup/:matchupId/start`
+  //let buttonUrl = `https://google.com?user=${ctx.from.id}&amount=${amount}`;
+      let buttonUrl = `http://s3-ap-southeast-1.amazonaws.com/test.sphere.com/index.html`;
+      ctx.replyWithMarkdown(replyText,
+        Markup.inlineKeyboard([
+          [{
+            text: `⚔️ Accept Duel for ${amount} Orb ⚔️`,
+        	  url: buttonUrl
+        	}]
+        ]).extra()
+      );
+    }
+  */
+
+  amount = parseInt(amount);
+  const fromUser = ctx.from;
+  const toUser = ctx.message.reply_to_message.from;
+
+  if (fromUser.id === toUser.id) return `Cannot battle self`;
+  try {
+    await dbLock(ctx, fromUser.id);
+    if (fromUser.id !== toUser.id) await dbLock(ctx, toUser.id);
+  } catch (err) {
+    console.log("testHandler:: 🗝 dbLock error while trying make tip:", err);
+    return `*${fromUser.first_name}* sorry, try later.`;
+  }
+
+  if (toUser.is_bot) {
+    if (fromUser.id !== toUser.id) toggleLock(ctx, toUser.id);
+    toggleLock(ctx, fromUser.id);
+    return `*${fromUser.first_name}* you can't challenge a bot`;
+  }
+
+  let msg = "";
+}
+
 const tip = async (ctx, amount) => {
   amount = parseInt(amount);
   const fromUser = ctx.from;
@@ -138,10 +169,10 @@ const tip = async (ctx, amount) => {
   if (transactionSuccess) {
     msg += `*${fromUser.first_name}* sent ${amount.toLocaleString(
       "en-US"
-    )} 🤡*HONK*🤡 to *${toUser.first_name}*`;
+    )} ORB to *${toUser.first_name}*`;
   } else {
-    console.log("Need more HONK");
-    msg += `*${fromUser.first_name}* you need more 🤡*HONK*🤡`;
+    console.log("Need more ORB");
+    msg += `*${fromUser.first_name}* you need more ORB`;
   }
   return msg;
 };

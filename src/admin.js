@@ -18,7 +18,7 @@ module.exports.notification = (ctx, balances) => {
   const slpAddress = balances.address;
   const minBchSat = process.env.WARNING_MINIMUM_ESCROW_BALANCE;
   const minTokens = process.env.WARNING_MINIMUM_ESCROW_TOKEN_BALANCE;
-  
+
   let balance = `Escrow wallet:\n${bchSat} BCH Satoshi\n${tokens} HONK`;
   balance += `\ncashAddress: ${slpAddress}\nhttps://explorer.bitcoin.com/bch/address/${slpAddress}`;
 
