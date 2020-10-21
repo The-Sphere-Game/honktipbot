@@ -73,8 +73,7 @@ If you need further assistance, please contact @honktoken chat room.
     helpMsg,
     Markup.keyboard([
       ["/balance", "/help"],
-      ["/deposit", "/withdraw"],
-      ["/challenge"]
+      ["/deposit", "/withdraw"]
     ])
       .oneTime()
       .resize()
@@ -87,8 +86,7 @@ const menu = ctx => {
     `Main Menu:`,
     Markup.keyboard([
       ["/balance", "/help"],
-      ["/deposit", "/withdraw"],
-      ["/challenge"]
+      ["/deposit", "/withdraw"]
     ])
       .oneTime()
       .resize()

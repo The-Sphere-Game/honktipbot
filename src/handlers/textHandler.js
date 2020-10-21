@@ -18,7 +18,7 @@ module.exports.textHandler = async bot => {
 // Default answer to unknown messages
 const privateChat = ctx => {
   ctx.reply(
-    `Hello ${ctx.from.first_name} this is Honk tip bot.\nSee /help for more info.`,
+    `Hello ${ctx.from.first_name} this is ORB bot.\nSee /help for more info.`,
     Markup.keyboard([
       ["/balance", "/help"],
       ["/deposit", "/withdraw"]
@@ -40,7 +40,8 @@ const groupChat = async ctx => {
   const reClown = /🤡/g;
   const reCircus = /🎪/g;
 
-  const makeMatch = /\/challenge +[0-9]+/g;
+  // changed format for "challenge" to mirror the "re" format above
+  const makeMatch = /[0-9]+ *challenge/gi;
 
   let text = ctx.message.text;
 
@@ -87,36 +88,26 @@ const groupChat = async ctx => {
       if (isBanned(ctx.from.id)) return ctx.reply(banMsg);
       const tipResult = await tip(ctx, amount);
       ctx.replyWithMarkdown(tipResult);
+    } else if (parseFloat(text.match(makeMatch))) {
+      if (isBanned(ctx.from.id)) return ctx.reply(banMsg);
+      let amount = ctx.message.text.match(makeMatch)[0].split(" ")[0];
+      let replyText = `⚔️   *${ctx.from.first_name}* has an open challenge for ${amount} Orb ⚔️  `;
+
+      const challengeUrl = await challenge(ctx, amount);
+      ctx.replyWithMarkdown(replyText,
+        Markup.inlineKeyboard([
+          [{
+            text: `⚔️ Accept Duel for ${amount} Orb ⚔️`,
+        	  url: challengeUrl
+        	}]
+        ]).extra()
+      );
     }
   }
 };
 
 const challenge = async (ctx, amount) => {
-  /*
-    if (text.match(makeMatch)) {
-  //    const fromUser = ctx.from;
-  //    const toUser = ctx.message.reply_to_message.from;
-
-      if (fromUser.id === toUser.id) return `Cannot challenge yourself`;
-
-      let amount = ctx.message.text.match(makeMatch)[0].split(" ")[1];
-      let replyText = `⚔️   *${ctx.from.first_name}* has an open challenge for ${amount} Orb ⚔️  `;
-
-  //let buttonUrl = `http://sphere.tg.dev.bigkesh.com/matchup/:matchupId/start`
-  //let buttonUrl = `https://google.com?user=${ctx.from.id}&amount=${amount}`;
-      let buttonUrl = `http://s3-ap-southeast-1.amazonaws.com/test.sphere.com/index.html`;
-      ctx.replyWithMarkdown(replyText,
-        Markup.inlineKeyboard([
-          [{
-            text: `⚔️ Accept Duel for ${amount} Orb ⚔️`,
-        	  url: buttonUrl
-        	}]
-        ]).extra()
-      );
-    }
-  */
-
-  amount = parseInt(amount);
+  let challengeAmount = parseInt(amount);
   const fromUser = ctx.from;
   const toUser = ctx.message.reply_to_message.from;
 
@@ -135,7 +126,10 @@ const challenge = async (ctx, amount) => {
     return `*${fromUser.first_name}* you can't challenge a bot`;
   }
 
-  let msg = "";
+  let combinedMatchId = fromUser.id + toUser.id;
+  let msg = `http://s3-ap-southeast-1.amazonaws.com/test.sphere.com/index.html?match=${combinedMatchId}&amount=${challengeAmount}`;
+
+  return msg;
 }
 
 const tip = async (ctx, amount) => {
